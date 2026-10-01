@@ -1,0 +1,125 @@
+.class-selection-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.class-selection-modal {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #000000 !important; /* Black */
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6366F1; /* Indigo */
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.close-button:hover {
+  background-color: #E2E8F0; /* Hover state */
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body p {
+  margin: 0 0 1rem 0;
+  color: #000000 !important; /* Black */
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.class-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.class-item {
+  margin-bottom: 0.5rem;
+}
+
+.class-button {
+  width: 100%;
+  padding: 10px 16px; /* Explicit padding */
+  text-align: left;
+  background-color: #F1F5F9; /* Neutral subtle background */
+  border: 1px solid #CBD5E1; /* Border */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s; /* Subtle transition */
+  display: block;
+  color: #000000 !important; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.class-button:hover {
+  background-color: #E2E8F0; /* Hover state */
+}
+
+.class-button.selected {
+  background-color: #E2E8F0; /* Hover state background */
+  border-color: #6366F1; /* Indigo */
+  color: #000000; /* Black */
+  font-weight: bold;
+}
+
+.class-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); /* Indigo focus ring */
+}

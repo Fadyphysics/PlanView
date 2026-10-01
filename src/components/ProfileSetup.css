@@ -1,0 +1,239 @@
+.profile-setup {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  color: #000000; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-setup h1 {
+  color: #000000 !important; /* Black */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.profile-setup p {
+  color: #000000 !important; /* Black */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+form {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  color: #000000 !important; /* Black */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  min-height: 44px;
+  box-sizing: border-box;
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-primary:hover {
+  background-color: #4F46E5; /* Hover state */
+}
+
+.add-class-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.add-class-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.btn-add-class {
+  background-color: #059669;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-add-class:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.classes-list {
+  margin-top: 0.5rem;
+}
+
+.classes-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.class-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+}
+
+.btn-remove-class {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-class:hover {
+  background-color: #fee2e2;
+  border-radius: 50%;
+}
+
+.class-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .profile-setup {
+    padding: 2rem;
+  }
+  
+  .container {
+    padding: 0 2rem;
+  }
+  
+  .profile-setup h1 {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-setup p {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+  
+  form {
+    padding: 2rem;
+  }
+  
+  .form-row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  .btn-primary {
+    width: auto;
+    min-width: 120px;
+  }
+}
+
+.success-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #10b981; /* Green */
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

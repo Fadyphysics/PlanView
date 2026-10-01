@@ -1,0 +1,199 @@
+/* Global styles */
+.App {
+  min-height: 100vh;
+  background-color: #e5e7eb; /* Light grey background */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Language selection modal */
+.language-selection-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  min-width: 280px;
+  max-width: 90vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-title {
+  color: #000000; /* Black */
+  margin-bottom: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.language-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.language-btn {
+  padding: 10px 16px; /* Explicit padding */
+  border: 2px solid #d1d5db;
+  border-radius: 6px; /* Rounded corners */
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  min-width: 200px;
+  min-height: 44px;
+  box-sizing: border-box;
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.language-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #4F46E5; /* Hover state */
+}
+
+.english-btn {
+  color: #FFFFFF; /* White text */
+  background-color: #6366F1; /* Indigo */
+}
+
+.arabic-btn {
+  color: #FFFFFF; /* White text */
+  background-color: #6366F1; /* Indigo */
+}
+
+.english-btn:hover {
+  background-color: #4F46E5; /* Hover state */
+  border-color: #4F46E5; /* Hover state border */
+}
+
+.arabic-btn:hover {
+  background-color: #4F46E5; /* Hover state */
+  border-color: #4F46E5; /* Hover state border */
+}
+
+/* App loading spinner */
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #e5e7eb;
+  color: #000000; /* Black */
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #6366F1; /* Indigo */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Home button styles */
+.btn-home {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  padding: 10px 16px; /* Explicit padding */
+  font-size: 0.875rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  min-height: 40px;
+  min-width: 80px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-home:hover {
+  background-color: #4F46E5; /* Hover state */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-home:focus-visible {
+  outline: 2px solid #A5B4FC; /* Light indigo outline */
+  outline-offset: 2px;
+}
+
+/* Apply black text globally */
+body, h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, label {
+  color: #000000; /* Black */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.counter {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  color: #000000; /* Black */
+  background: #e5e7eb; /* Grey background */
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 1.5rem;
+  min-height: 44px;
+
+  &:hover {
+    border-color: #9ca3af; /* Grey border */
+  }
+  &:focus-visible {
+    outline: 2px solid #6366F1; /* Indigo outline */
+    outline-offset: 2px;
+  }
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .modal-content {
+    padding: 2rem;
+    min-width: 300px;
+  }
+  
+  .language-btn {
+    padding: 10px 16px; /* Explicit padding */
+    font-size: 1.125rem;
+    min-width: 200px;
+  }
+  
+  .counter {
+    font-size: 1.125rem;
+    padding: 0.625rem 0.625rem;
+    margin-bottom: 1.5rem;
+  }
+}

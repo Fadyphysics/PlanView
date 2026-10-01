@@ -1,0 +1,273 @@
+:root {
+  --text: #1E293B; /* Slate/charcoal for light mode */
+  --text-h: #1E293B; /* Slate/charcoal for light mode */
+  --bg: #e5e7eb; /* Light grey background */
+  --border: #d1d5db; /* Grey */
+  --code-bg: #f4f3ec;
+  --accent: #6366F1; /* Indigo */
+  --accent-bg: rgba(99, 102, 241, 0.1); /* Indigo lightened */
+  --accent-border: rgba(99, 102, 241, 0.5); /* Indigo */
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  font-family: 'Tahoma', sans-serif;
+  line-height: 1.5;
+  font-weight: bold;
+  letter-spacing: 0.18px;
+
+  color-scheme: light dark;
+  color: #000000; /* Black text */
+  background-color: #e5e7eb; /* Light grey background */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Mobile-first sizing */
+  font-size: 14px;
+  
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+/* Arabic font support */
+:root:lang(ar) {
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #e5e7eb; /* Light grey background */
+  color: #000000; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling on orientation change */
+  overscroll-behavior: none; /* Prevent overscroll behavior */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  color: #000000; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+}
+
+/* Base form styles */
+input,
+textarea,
+select {
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+  font-size: 1rem; /* Match root font size */
+  color: #000000; /* Black text */
+  background-color: #ffffff; /* White background for inputs */
+  border: 1px solid #d1d5db; /* Grey border */
+  border-radius: 0.5rem; /* 8px rounded corners */
+  padding: 0.75rem; /* Increased padding for better touch targets */
+  min-height: 44px; /* Minimum touch target size */
+  box-sizing: border-box;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #6366F1; /* Indigo */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+p {
+  color: #000000; /* Black text for paragraphs */
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+}
+
+label {
+  color: #000000; /* Black text for labels */
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+}
+
+/* Code/mono elements */
+code, kbd, samp, pre {
+  font-family: 'Tahoma', monospace;
+  font-weight: bold;
+  background-color: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* RTL Layout adjustments */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* Override any text elements to ensure consistent slate/charcoal color */
+* {
+  color: #000000;
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+/* Container styles */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Primary button styles */
+.btn-primary {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  min-height: 44px; /* Touch target */
+}
+
+.btn-primary:hover {
+  background-color: #4F46E5; /* Hover state */
+}
+
+/* Secondary button styles */
+.btn-secondary {
+  background-color: #F1F5F9; /* Neutral subtle background */
+  color: #000000; /* Black text */
+  border: 1px solid #CBD5E1; /* Border */
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  font-family: 'Tahoma', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  min-height: 44px; /* Touch target */
+}
+
+.btn-secondary:hover {
+  background-color: #E2E8F0; /* Hover state */
+}
+
+/* Loading container */
+.app-loading,
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.app-loading .spinner,
+.loading .spinner {
+  margin-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+  margin: 1rem 0;
+  @media (min-width: 768px) {
+    font-size: 2.25rem;
+    letter-spacing: -1.68px;
+    margin: 2rem 0;
+  }
+}
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  letter-spacing: -0.24px;
+  margin: 0 0 0.5rem;
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  padding: 0.25rem 0.5rem;
+  background: var(--code-bg);
+}

@@ -1,0 +1,324 @@
+/* Import ADLaM Display font */
+@import url('https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap');
+
+/* App header styles */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8fafc; /* Very light grey background */
+  border-bottom: 1px solid #e2e8f0; /* Light border */
+}
+
+.app-header h1 {
+  font-family: 'ADLaM Display', 'Tahoma', sans-serif;
+  font-size: 2rem;
+  color: #1e40af; /* Vivid blue color */
+  margin: 0;
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #6366F1; /* Indigo */
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-text:hover {
+  background-color: #f1f5f9; /* Light hover effect */
+}
+
+.language-selector {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  color: #000000; /* Black text */
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Welcome section */
+.welcome-section {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f8fafc; /* Very light grey background */
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-section h2 {
+  font-family: 'ADLaM Display', 'Tahoma', sans-serif;
+  font-size: 1.5rem; /* Smaller than the title */
+  color: #1e40af; /* Vivid blue color */
+  margin: 0 0 0.5rem 0;
+  font-weight: bold;
+}
+
+.welcome-section p {
+  color: #000000; /* Black text */
+  font-size: 1rem;
+  margin: 0.25rem 0;
+  font-weight: bold;
+}
+
+/* Manage classes section */
+.manage-classes-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  text-align: center;
+  color: #000000; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.manage-classes-section h3 {
+  color: #000000 !important; /* Black */
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+}
+
+.btn-manage-classes {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: bold;
+  transition: all 0.2s ease; /* Subtle transition */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-manage-classes:hover {
+  background-color: #4F46E5; /* Hover state */
+}
+
+/* Classes section */
+.classes-section {
+  margin: 2rem 0;
+}
+
+.classes-section h3 {
+  color: #000000 !important; /* Black */
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.class-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+
+.class-icon:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.class-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #6366F1; /* Indigo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  position: relative;
+}
+
+.class-circle:hover {
+  transform: scale(1.05);
+  background-color: #4F46E5; /* Hover state */
+}
+
+.class-name {
+  color: #FFFFFF; /* White text for contrast */
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.class-name-full {
+  font-weight: bold;
+  color: #000000 !important; /* Black */
+  margin-bottom: 0.75rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.class-actions {
+  width: 100%;
+}
+
+.btn-small {
+  width: 100%;
+  padding: 10px 16px; /* Explicit padding */
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  min-height: 36px;
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-small:hover {
+  background-color: #4F46E5; /* Hover state */
+}
+
+.btn-small.btn-primary {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+}
+
+.plans-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.plan-card {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plan-info h4 {
+  color: #000000; /* Black */
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+}
+
+.plan-info p {
+  color: #000000; /* Black */
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.plan-details span {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .app-header {
+    padding: 1rem 2rem;
+  }
+  
+  .main-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.75rem; /* Slightly larger on tablet */
+  }
+  
+  .welcome-section p {
+    font-size: 1.25rem;
+  }
+  
+  .actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .btn-large {
+    padding: 1.5rem;
+    min-height: 70px;
+  }
+  
+  .previous-plans h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .plans-list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  
+  .plan-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+  }
+  
+  .plan-details {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+}
+
+/* RTL support */
+.rtl .app-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .header-actions {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.home-screen .app-header .app-title {
+  color: #0066ff !important;
+}

@@ -1,0 +1,277 @@
+.review-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  width: 100%;
+  max-width: 100%;
+  color: #000000; /* Black text */
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+}
+
+.review-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.review-header {
+  padding: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.review-header h1 {
+  color: #000000 !important; /* Black */
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.validation-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.validation-badge.success {
+  background-color: #dcfce7;
+  color: #000000; /* Black */
+}
+
+.validation-badge.warning {
+  background-color: #fef3c7;
+  color: #000000; /* Black */
+}
+
+.review-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.plan-summary {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.plan-summary h2 {
+  color: #000000 !important; /* Black */
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0 0 0.75rem 0;
+}
+
+.plan-summary h2 small {
+  display: block;
+  color: #000000 !important; /* Black */
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 0.25rem;
+}
+
+.summary-details p {
+  margin: 0.5rem 0;
+  color: #000000 !important; /* Black */
+  font-weight: bold;
+}
+
+.daily-reviews h3,
+.weekly-activities-review h3 {
+  color: #000000 !important; /* Black */
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.day-review {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.day-review h4 {
+  color: #000000 !important; /* Black */
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+}
+
+.day-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content-section p {
+  margin: 0.5rem 0;
+  color: #000000; /* Black */
+  font-weight: bold;
+  word-break: break-word;
+}
+
+.weekly-activities-review {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.activity-content p {
+  margin: 0.75rem 0;
+  color: #000000; /* Black */
+  font-weight: bold;
+}
+
+.review-actions {
+  padding: 1rem;
+  background-color: #fff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+  gap: 1rem;
+  width: 100%;
+}
+
+.pdf-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #4F46E5; /* Hover state */
+}
+
+.btn-accent {
+  background-color: #6366F1; /* Indigo */
+  color: #FFFFFF; /* White text */
+  border: none;
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-accent:hover:not(:disabled) {
+  background-color: #4F46E5; /* Hover state */
+}
+
+.btn-secondary {
+  background-color: #F1F5F9; /* Neutral subtle background */
+  color: #000000; /* Black text */
+  border: 1px solid #CBD5E1; /* Border */
+  padding: 10px 16px; /* Explicit padding */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Subtle transition */
+  font-family: 'Tahoma', sans-serif;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #E2E8F0; /* Hover state */
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* RTL support */
+.rtl .action-buttons {
+  flex-direction: row-reverse;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .review-header {
+    padding: 1.5rem 2rem;
+  }
+  
+  .review-content {
+    padding: 2rem;
+  }
+  
+  .plan-summary {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .plan-summary h2 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem 0;
+  }
+  
+  .day-review {
+    padding: 1.25rem;
+  }
+  
+  .day-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .weekly-activities-review {
+    padding: 1.5rem;
+  }
+  
+  .review-actions {
+    padding: 1.5rem 2rem;
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 800px;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .pdf-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: auto;
+  }
+  
+  .btn-primary,
+  .btn-accent,
+  .btn-secondary {
+    width: auto;
+  }
+}
