@@ -22,12 +22,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    
+
     /* Path mapping */
     "paths": {
       "@/*": ["./src/*"],
       "@models/*": ["./src/models/*"]
-    },
+    }
   },
   "include": ["src"]
 }
