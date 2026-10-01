@@ -24,14 +24,10 @@
     "noFallthroughCasesInSwitch": true,
     
     /* Path mapping */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@models/*": ["./src/models/*"]
     },
-    
-    /* Deprecation handling */
-    "ignoreDeprecations": "6.0"
   },
   "include": ["src"]
 }
