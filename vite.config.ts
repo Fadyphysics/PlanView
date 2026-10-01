@@ -5,7 +5,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './', // Use relative paths for file protocol compatibility
+  base: '/PlanView/', // Changed to deploy under subdirectory
   resolve: {
     alias: {
       // Force all imports to use the same React instance in the root node_modules

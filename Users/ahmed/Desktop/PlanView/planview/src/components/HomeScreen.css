@@ -1,0 +1,14 @@
+/* Style for the PlanView Title */
+.home-screen .app-header .app-title {
+  color: #0066ff !important;
+  font-family: 'Adlam Display', serif !important;
+  font-weight: 700 !important; /* 700 is bold */
+}
+
+/* Style for the Welcome Back Teacher text */
+.home-screen .welcome-text {
+  font-family: 'Adlam Display', serif !important;
+  font-weight: 700 !important; /* 700 is bold */
+  /* Add a color here if you want it different from the title */
+  /* color: #333333; */ 
+}

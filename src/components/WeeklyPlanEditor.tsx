@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { saveWeeklyPlan, getTeacherProfile, getNextSundayToDateRange } from '../utils/indexedDbUtils';
+import { saveWeeklyPlan, getTeacherProfile, getNextSundayToDateRange, saveTeacherProfile } from '../utils/indexedDbUtils';
 import type { WeeklyPlan, DayPlan } from '../models';
 import HomeButton from './HomeButton';
 import CalendarPicker from './CalendarPicker';
@@ -38,6 +38,37 @@ const WeeklyPlanEditor: React.FC = () => {
     class: ''  // Add class to teacher details
   });
   
+  // Update teacher details when profile loads
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profile = await getTeacherProfile();
+        if (profile) {
+          setTeacherDetails({
+            teacher: profile.name,
+            subject: profile.subject,
+            grade: profile.grade,
+            class: profile.currentClass || profile.class || ''  // Use current class if available, otherwise fallback to old class field
+          });
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, []);
+  
+  // Handler for changing teacher details
+  const handleTeacherDetailChange = (field: keyof typeof teacherDetails, value: string) => {
+    setTeacherDetails(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
   // State for daily plans
   const [dailyPlans, setDailyPlans] = useState<DayPlan[]>([
     { day: t('sunday'), lessonTopic: '', learningObjectives: '', activities: '', activityTools: '', homeworkAssessment: '' },
@@ -69,6 +100,29 @@ const WeeklyPlanEditor: React.FC = () => {
 
     loadProfile();
   }, []);
+  
+  // Function to handle date changes
+  const handleStartDateChange = (newDate: Date) => {
+    if (!isNaN(newDate.getTime())) {
+      // Calculate end date (Thursday) based on new start date (Sunday)
+      const newEndDate = new Date(newDate);
+      newEndDate.setDate(newDate.getDate() + 4); // Sunday to Thursday
+      
+      setWeekDetails({
+        weekNumber: newDate.getWeekNumber(),
+        startDate: newDate,
+        endDate: newEndDate
+      });
+      
+      // Close the calendar after selection
+      setShowCalendar(false);
+    }
+  };
+  
+  // Function to toggle calendar visibility
+  const toggleCalendar = () => {
+    setShowCalendar(!showCalendar);
+  };
 
   // Handle clicks outside the calendar to close it
   useEffect(() => {
@@ -98,32 +152,7 @@ const WeeklyPlanEditor: React.FC = () => {
       });
     }
   };
-
-
-  // Function to handle date changes
-  const handleStartDateChange = (newDate: Date) => {
-    if (!isNaN(newDate.getTime())) {
-      // Calculate end date (Thursday) based on new start date (Sunday)
-      const newEndDate = new Date(newDate);
-      newEndDate.setDate(newDate.getDate() + 4); // Sunday to Thursday
-      
-      setWeekDetails({
-        weekNumber: newDate.getWeekNumber(),
-        startDate: newDate,
-        endDate: newEndDate
-      });
-      
-      // Close the calendar after selection
-      setShowCalendar(false);
-    }
-  };
-
-  // Function to toggle calendar visibility
-  const toggleCalendar = () => {
-    setShowCalendar(!showCalendar);
-  };
-
-  // Function to check if at least one activity exists
+// Function to check if at least one activity exists
   const hasAtLeastOneActivity = (): boolean => {
     return dailyPlans.some(day => day.activities && day.activities.trim() !== '');
   }
@@ -177,6 +206,46 @@ const WeeklyPlanEditor: React.FC = () => {
       // Save the plan
       await saveWeeklyPlan(weeklyPlan);
 
+      // Update teacher profile with latest details if any changes were made
+      try {
+        // Try to get the existing profile to update it
+        const existingProfile = await getTeacherProfile();
+        if (existingProfile) {
+          // Update the existing profile with new details
+          const updatedProfile = {
+            ...existingProfile,
+            name: teacherDetails.teacher,
+            subject: teacherDetails.subject,
+            grade: teacherDetails.grade,
+            currentClass: teacherDetails.class,
+            updatedAt: new Date()
+          };
+          
+          await saveTeacherProfile(updatedProfile);
+        } else {
+          // If no profile exists, create a new one with an ID
+          const newProfile = {
+            id: 1, // Default ID for the first teacher profile
+            name: teacherDetails.teacher,
+            email: '', // Could be added if needed
+            subject: teacherDetails.subject,
+            grade: teacherDetails.grade,
+            class: '', // Original class field
+            school: '', // Could be added if needed
+            branch: '', // Could be added if needed
+            classes: [teacherDetails.class], // Array of classes
+            currentClass: teacherDetails.class, // Currently selected class
+            createdAt: new Date(),
+            updatedAt: new Date()
+          };
+          
+          await saveTeacherProfile(newProfile);
+        }
+      } catch (profileUpdateError) {
+        console.warn('Could not update teacher profile:', profileUpdateError);
+        // Continue saving the plan even if profile update fails
+      }
+
       // Navigate to review screen
       navigate('/review');
     } catch (error) {
@@ -228,9 +297,41 @@ const WeeklyPlanEditor: React.FC = () => {
                   <input
                     type="text"
                     id="startDate"
-                    value={`${weekDetails.startDate.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })}`}
-                    readOnly
+                    value={`${weekDetails.startDate.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' })}`}
                     onClick={toggleCalendar}
+                    onChange={(e) => {
+                      const dateStr = e.target.value;
+                      const date = new Date(dateStr);
+                      // Try to parse the date string - could be in various formats
+                      if (!isNaN(date.getTime())) {
+                        handleStartDateChange(date);
+                      } else {
+                        // If direct parsing fails, try to parse common formats
+                        // Attempt to parse various date formats like MM/DD/YYYY, DD/MM/YYYY, etc.
+                        const parts = dateStr.split(/[\/\-.\s]/);
+                        if (parts.length >= 3) {
+                          const [part1, part2, part3] = parts.map(Number);
+                          // Try different combinations to create a valid date
+                          const formatsToTry = [
+                            () => new Date(part1, part2 - 1, part3), // YYYY-MM-DD
+                            () => new Date(part3, part1 - 1, part2), // MM/DD/YYYY
+                            () => new Date(part3, part2 - 1, part1), // DD/MM/YYYY
+                          ];
+                          
+                          for (const formatFn of formatsToTry) {
+                            try {
+                              const parsedDate = formatFn();
+                              if (!isNaN(parsedDate.getTime())) {
+                                handleStartDateChange(parsedDate);
+                                break;
+                              }
+                            } catch (e) {
+                              continue; // Try next format
+                            }
+                          }
+                        }
+                      }
+                    }}
                     className="date-input"
                     placeholder="Select Sunday"
                   />
@@ -259,7 +360,7 @@ const WeeklyPlanEditor: React.FC = () => {
                     type="text"
                     id="teacher"
                     value={teacherDetails.teacher}
-                    readOnly
+                    onChange={(e) => handleTeacherDetailChange('teacher', e.target.value)}
                   />
                 </div>
                 
@@ -269,7 +370,7 @@ const WeeklyPlanEditor: React.FC = () => {
                     type="text"
                     id="subject"
                     value={teacherDetails.subject}
-                    readOnly
+                    onChange={(e) => handleTeacherDetailChange('subject', e.target.value)}
                   />
                 </div>
                 
@@ -279,7 +380,7 @@ const WeeklyPlanEditor: React.FC = () => {
                     type="text"
                     id="grade"
                     value={teacherDetails.grade}
-                    readOnly
+                    onChange={(e) => handleTeacherDetailChange('grade', e.target.value)}
                   />
                 </div>
                 
@@ -289,7 +390,7 @@ const WeeklyPlanEditor: React.FC = () => {
                     type="text"
                     id="class"
                     value={teacherDetails.class}
-                    readOnly
+                    onChange={(e) => handleTeacherDetailChange('class', e.target.value)}
                   />
                 </div>
               </div>

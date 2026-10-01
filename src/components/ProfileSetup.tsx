@@ -23,13 +23,11 @@ const ProfileSetup: React.FC = () => {
     class: '',
     school: 'Seacoast International School',
     branch: 'Hay Demashq Branch',
-    classes: [], // Initialize with empty array
-    currentClass: '',
+    classes: [], // Kept for compatibility but not used
+    currentClass: '', // Kept for compatibility but not used
     createdAt: new Date(),
     updatedAt: new Date()
   });
-
-  const [newClass, setNewClass] = useState('');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -38,7 +36,7 @@ const ProfileSetup: React.FC = () => {
         if (existingProfile) {
           setProfile({
             ...existingProfile,
-            classes: existingProfile.classes || [],
+            classes: existingProfile.classes || [], // Kept for compatibility but not used
             currentClass: existingProfile.currentClass || existingProfile.class || ''
           });
         }
@@ -61,37 +59,6 @@ const ProfileSetup: React.FC = () => {
     } as TeacherProfile));
   };
 
-  const handleAddClass = () => {
-    if (newClass.trim() && !profile.classes?.includes(newClass.trim())) {
-      setProfile(prev => ({
-        ...prev,
-        classes: [...(prev.classes || []), newClass.trim()],
-        updatedAt: new Date()
-      }));
-      setNewClass('');
-    }
-  };
-
-  const handleRemoveClass = (classToRemove: string) => {
-    setProfile(prev => ({
-      ...prev,
-      classes: (prev.classes || []).filter(cls => cls !== classToRemove),
-      // If we're removing the current class, clear it
-      currentClass: prev.currentClass === classToRemove ? '' : prev.currentClass,
-      updatedAt: new Date()
-    }));
-  };
-
-  const handleCurrentClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClass = e.target.value;
-    setProfile(prev => ({
-      ...prev,
-      currentClass: selectedClass,
-      // Keep the old class field for backward compatibility
-      class: selectedClass,
-      updatedAt: new Date()
-    }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,64 +198,6 @@ const ProfileSetup: React.FC = () => {
               value={profile.school || ''}
               onChange={handleChange}
             />
-          </div>
-          
-          {/* Multiple Classes Management */}
-          <div className="form-group">
-            <label>Add Classes</label>
-            <div className="add-class-section">
-              <input
-                type="text"
-                value={newClass}
-                onChange={(e) => setNewClass(e.target.value)}
-                placeholder="Enter class name"
-                className="add-class-input"
-              />
-              <button 
-                type="button" 
-                className="btn-add-class"
-                onClick={handleAddClass}
-                disabled={!newClass.trim()}
-              >
-                Add Class
-              </button>
-            </div>
-            
-            {profile.classes && profile.classes.length > 0 && (
-              <div className="classes-list">
-                <p>Current Classes:</p>
-                <ul>
-                  {profile.classes.map((cls) => (
-                    <li key={cls} className="class-item">
-                      <span>{cls}</span>
-                      <button 
-                        type="button" 
-                        className="btn-remove-class"
-                        onClick={() => handleRemoveClass(cls)}
-                      >
-                        ×
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            
-            {profile.classes && profile.classes.length > 0 && (
-              <div className="form-group">
-                <label htmlFor="currentClass">Select Current Class</label>
-                <select
-                  value={profile.currentClass || ''}
-                  onChange={handleCurrentClassChange}
-                  className="class-select"
-                >
-                  <option value="">Select a class</option>
-                  {profile.classes.map((cls) => (
-                    <option key={cls} value={cls}>{cls}</option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
           
           <div className="form-actions">
