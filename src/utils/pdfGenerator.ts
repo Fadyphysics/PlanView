@@ -1,5 +1,4 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import html2pdf from 'html2pdf.js';
 import type { WeeklyPlan } from '../models';
 
 interface PdfGenerationResult {
