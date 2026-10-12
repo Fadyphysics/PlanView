@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { saveWeeklyPlan, getTeacherProfile } from '../utils/indexedDbUtils';
+import { saveWeeklyPlan, getTeacherProfile, getNextSundayToDateRange } from '../utils/indexedDbUtils';
 import type { WeeklyPlan, DayPlan } from '../models';
 import HomeButton from './HomeButton';
 import './DayEditor.css';
@@ -174,23 +174,51 @@ const DayEditor: React.FC = () => {
       
       navigate(`/day/${currentDayIndex + 1}`);
     } else {
-      // If we're on the last day, validate and move to review
-      const hasActivity = allDays.some(day => day.activities && day.activities.trim() !== '');
-      if (!hasActivity) {
-        setErrors({ noActivity: t('atLeastOneActivity') });
-        return;
-      }
-      navigate('/review');
+      void handleGoToReview();
     }
   };
 
-  const handleGoToReview = () => {
-    const hasActivity = allDays.some(day => day.activities && day.activities.trim() !== '');
+  const handleGoToReview = async () => {
+    const reviewedDays = [...allDays];
+    reviewedDays[currentDayIndex] = dayPlan;
+    const hasActivity = reviewedDays.some(day => day.activities && day.activities.trim() !== '');
     if (!hasActivity) {
       setErrors({ noActivity: t('atLeastOneActivity') });
       return;
     }
-    navigate('/review');
+
+    try {
+      const { startDate, endDate, weekNumber } = getNextSundayToDateRange();
+      const now = new Date();
+      const weeklyPlan: WeeklyPlan = {
+        id: Date.now(),
+        teacherId: 1,
+        academicYear: now.getFullYear().toString(),
+        weekNumber,
+        startDate,
+        endDate,
+        teacher: teacherDetails.teacher,
+        subject: teacherDetails.subject,
+        grade: teacherDetails.grade,
+        class: teacherDetails.class,
+        days: reviewedDays,
+        weeklyActivities: {
+          hasSpecialActivity: false,
+          description: '',
+          materialsNeeded: '',
+          teacherNotes: ''
+        },
+        createdAt: now,
+        updatedAt: now
+      };
+
+      await saveWeeklyPlan(weeklyPlan);
+      localStorage.setItem('weeklyPlanDraft', JSON.stringify(weeklyPlan));
+      navigate('/review', { state: { weeklyPlan } });
+    } catch (error) {
+      console.error('Error saving weekly plan for review:', error);
+      setErrors({ reviewSave: 'Could not save the weekly plan. Please try again.' });
+    }
   };
 
   if (loading) {
@@ -227,6 +255,11 @@ const DayEditor: React.FC = () => {
               {errors.noActivity && (
                 <div className="alert alert-warning">
                   {errors.noActivity}
+                </div>
+              )}
+              {errors.reviewSave && (
+                <div className="alert alert-warning">
+                  {errors.reviewSave}
                 </div>
               )}
             </div>

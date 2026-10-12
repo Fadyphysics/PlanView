@@ -1,0 +1,1 @@
+export const AMIRI_FONT_BASE64 = "AAEAAAASAQACAAAgR1BTVC..."; // Paste full base64 string here

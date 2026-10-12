@@ -1,226 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { generatePdfs } from '../utils/pdfGenerator';
-import { getAllWeeklyPlans } from '../utils/indexedDbUtils';
-import type { WeeklyPlan, DayPlan } from '../models';
-import HomeButton from './HomeButton';
+import React, { useState } from 'react';
+import type { WeeklyPlan } from '../models';
+import { generatePdf, testArabicPdfGeneration } from '../utils/pdfGenerator';
 import './ReviewScreen.css';
 
-const ReviewScreen: React.FC = () => {
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [generatingPdf, setGeneratingPdf] = useState<boolean>(false);
-  const [validationMessage, setValidationMessage] = useState<string>('');
+interface ReviewScreenProps {
+  weeklyPlan: WeeklyPlan;
+  onEdit: () => void;
+  onHome: () => void;
+}
 
-  useEffect(() => {
-    const loadLatestPlan = async () => {
-      try {
-        const plans = await getAllWeeklyPlans();
-        if (plans.length > 0) {
-          // Get the latest plan
-          const latestPlan = plans.reduce((latest, current) => 
-            current.updatedAt > latest.updatedAt ? current : latest
-          );
-          setWeeklyPlan(latestPlan);
-          
-          // Check validation - check if at least one day has activities
-          const hasActivity = latestPlan.days.some(day => day.activities.trim() !== '');
-          if (!hasActivity) {
-            setValidationMessage(t('oneActivityRequired'));
-          } else {
-            setValidationMessage(t('weeklyPlanComplete'));
-          }
-        }
-      } catch (error) {
-        console.error('Error loading plan:', error);
-      } finally {
-        setLoading(false);
+export const ReviewScreen: React.FC<ReviewScreenProps> = ({
+  weeklyPlan,
+  onEdit,
+  onHome,
+}) => {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // Diagnostic logging for Arabic text
+  console.log("A. Immediately after teacher enters it (in ReviewScreen):", weeklyPlan);
+
+  // Helper to trigger file download or share
+  const handlePdfAction = async (type: 'classdojo' | 'coordinator') => {
+    setIsGenerating(true);
+    try {
+      // C. When the WeeklyPlan is loaded
+      console.log("C. When the WeeklyPlan is loaded:", weeklyPlan);
+      
+      // D. Immediately before createClassDojoPdf()
+      if (type === 'classdojo') {
+        console.log("D. Immediately before createClassDojoPdf():", weeklyPlan);
       }
-    };
+      // E. Immediately before createCoordinatorPdf()
+      else {
+        console.log("E. Immediately before createCoordinatorPdf():", weeklyPlan);
+      }
+      
+      const result = await generatePdf(weeklyPlan, type);
+      const blob = result.pdf;
+      const fileName = result.filename;
 
-    loadLatestPlan();
-  }, []);
+      if (!blob || blob.size === 0) {
+        alert('PDF generation failed or file is empty.');
+        return;
+      }
 
-  const handleGeneratePdf = async (pdfType: 'classdojo' | 'coordinator') => {
-    if (!weeklyPlan) return;
-    
-    setGeneratingPdf(true);
-    try {
-      const pdfs = await generatePdfs(weeklyPlan);
-      
-      // Determine which blob to use based on type
-      const blob = pdfType === 'classdojo' ? pdfs.classdojoPdf : pdfs.coordinatorPdf;
-      const filename = pdfType === 'classdojo' ? pdfs.classdojoFilename : pdfs.coordinatorFilename;
-      
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      
-      // Clean up
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 100);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    } finally {
-      setGeneratingPdf(false);
-    }
-  };
+      const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
-  const handleShare = async (pdfType: 'classdojo' | 'coordinator') => {
-    if (!weeklyPlan) return;
-    
-    try {
-      const pdfs = await generatePdfs(weeklyPlan);
-      
-      // Determine which blob to use based on type
-      const blob = pdfType === 'classdojo' ? pdfs.classdojoPdf : pdfs.coordinatorPdf;
-      const filename = pdfType === 'classdojo' ? pdfs.classdojoFilename : pdfs.coordinatorFilename;
-      
-      // Create file for sharing
-      const file = new File([blob], filename, { type: 'application/pdf' });
-      
-      // Check if Web Share API is available
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: filename,
-            text: pdfType === 'classdojo' 
-              ? t('shareClassDojoPdf') 
-              : t('shareCoordinatorPdf'),
-            files: [file]
-          });
-        } catch (error) {
-          // User cancelled sharing, fall back to download
-          console.log('Sharing cancelled, falling back to download');
-          handleGeneratePdf(pdfType);
-        }
+      // Check if browser is mobile & supports Web Share API file payload
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+        await navigator.share({
+          files: [pdfFile],
+        });
       } else {
-        // Web Share API not supported, fall back to download
-        handleGeneratePdf(pdfType);
+        // Desktop / Unsupported fallback: Force direct download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
     } catch (error) {
-      console.error('Error sharing PDF:', error);
-      // Fall back to download
-      handleGeneratePdf(pdfType);
+      console.error(`Error processing ${type} PDF:`, error);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const handleEdit = () => {
-    navigate('/weekly-plan');
+  // Function to run isolated Arabic text test
+  const handleArabicTest = async () => {
+    setIsGenerating(true);
+    try {
+      console.log("Running isolated Arabic text test...");
+      const arabicTestBlob = await testArabicPdfGeneration();
+      
+      // Download the test PDF
+      const url = URL.createObjectURL(arabicTestBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'arabic_text_test.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      console.log("Isolated Arabic test PDF downloaded successfully");
+    } catch (error) {
+      console.error('Error with Arabic text test:', error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="review-screen loading">
-        <div className="spinner"></div>
-        <p>{t('loading')}...</p>
-      </div>
-    );
-  }
-
-  if (!weeklyPlan) {
-    return (
-      <div className="review-screen">
-        <div className="container">
-          <h1>{t('reviewScreenTitle')}</h1>
-          <p>No weekly plan found. Please go back and create one.</p>
-          <button onClick={() => navigate('/weekly-plan')} className="btn-primary">
-            {t('startNewPlan')}
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Log the weekly plan when component renders
+  console.log("B. When the WeeklyPlan object is saved (component render):", weeklyPlan);
 
   return (
-    <div className="review-screen">
-      <HomeButton />
-      <div className="review-container">
-        <header className="review-header">
-          <h1>{t('reviewScreenTitle')}</h1>
-          <div className={`validation-badge ${validationMessage.includes('complete') ? 'success' : 'warning'}`}>
-            {validationMessage}
-          </div>
-        </header>
+    <div className="review-container">
+      <header className="review-header">
+        <h2>Review Weekly Plan</h2>
+        <div className="plan-meta">
+          <span><strong>Grade:</strong> {weeklyPlan.grade}</span>
+          <span><strong>Class:</strong> {weeklyPlan.class}</span>
+          <span><strong>Subject:</strong> {weeklyPlan.subject}</span>
+        </div>
+      </header>
 
-        <main className="review-content">
-          <div className="plan-summary">
-            <h2>
-              <small>{t('dateRange', { 
-                startDate: new Date(weeklyPlan.startDate).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' }), 
-                endDate: new Date(weeklyPlan.endDate).toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })
-              })}</small>
-            </h2>
-            
-            <div className="summary-details">
-              <p><strong>{t('teacher')}:</strong> {weeklyPlan.teacher}</p>
-              <p><strong>{t('subject')}:</strong> {weeklyPlan.subject}</p>
-              <p><strong>{t('grade')}:</strong> {weeklyPlan.grade}{weeklyPlan.class}</p>
-            </div>
-          </div>
-
-          <div className="daily-reviews">
-            <h3>{t('dailyLessons')}</h3>
-            {weeklyPlan.days.map((day: DayPlan, index: number) => (
-              <div key={index} className="day-review">
-                <h4>{day.day}</h4>
-                <div className="day-content">
-                  <div className="content-section">
-                    <p><strong>{t('lessonTopic')}:</strong> {day.lessonTopic || '-'}</p>
-                    <p><strong>{t('learningObjectives')}:</strong> {day.learningObjectives || '-'}</p>
-                  </div>
-                  <div className="content-section">
-                    <p><strong>{t('activitiesClasswork')}:</strong> {day.activities || '-'}</p>
-                    <p><strong>{t('activityTools')}:</strong> {day.activityTools || '-'}</p>
-                    <p><strong>{t('homeworkAssessment')}:</strong> {day.homeworkAssessment || '-'}</p>
-                  </div>
-                </div>
-              </div>
+      <div className="review-body">
+        <h3>Plan Details</h3>
+        <table className="review-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Topic / Lesson</th>
+              <th>Learning Objectives</th>
+              <th>Homework / Assessment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(weeklyPlan.days || []).map((day: any, index: number) => (
+              <tr key={index}>
+                <td>{day.day || day.name || `Day ${index + 1}`}</td>
+                <td>{day.lessonTopic || day.topic || '-'}</td>
+                <td>{day.learningObjectives || '-'}</td>
+                <td>{day.homeworkAssessment || day.homework || '-'}</td>
+              </tr>
             ))}
-          </div>
-
-          {/* Removed the weekly activities section since it's been removed from the workflow */}
-        </main>
-
-        <footer className="review-actions">
-          <div className="action-buttons">
-            <button 
-              className="btn-secondary" 
-              onClick={handleEdit}
-              disabled={generatingPdf}
-            >
-              {t('edit')}
-            </button>
-            
-            <div className="pdf-buttons">
-              <button 
-                className="btn-primary" 
-                onClick={() => handleShare('classdojo')}
-                disabled={generatingPdf}
-              >
-                {generatingPdf ? t('loading') + '...' : t('shareClassDojoPdf')}
-              </button>
-              
-              <button 
-                className="btn-accent" 
-                onClick={() => handleShare('coordinator')}
-                disabled={generatingPdf}
-              >
-                {generatingPdf ? t('loading') + '...' : t('shareCoordinatorPdf')}
-              </button>
-            </div>
-          </div>
-        </footer>
+          </tbody>
+        </table>
       </div>
+
+      <footer className="review-actions">
+        <button className="btn btn-secondary" onClick={onEdit} disabled={isGenerating}>
+          Edit Plan
+        </button>
+
+        <button 
+          className="btn btn-primary" 
+          onClick={() => handlePdfAction('classdojo')} 
+          disabled={isGenerating}
+        >
+          {isGenerating ? 'Generating...' : 'تحميل / مشاركة PDF كلاس دوجو'}
+        </button>
+
+        <button 
+          className="btn btn-primary" 
+          onClick={() => handlePdfAction('coordinator')} 
+          disabled={isGenerating}
+        >
+          {isGenerating ? 'Generating...' : 'تحميل / مشاركة PDF المنسق الأكاديمي'}
+        </button>
+        
+        {/* Button for isolated Arabic text test */}
+        <button 
+          className="btn btn-info" 
+          onClick={handleArabicTest} 
+          disabled={isGenerating}
+        >
+          {isGenerating ? 'Testing...' : 'Test Arabic Text Isolated'}
+        </button>
+
+        <button className="btn btn-outline" onClick={onHome} disabled={isGenerating}>
+          Home
+        </button>
+      </footer>
     </div>
   );
 };

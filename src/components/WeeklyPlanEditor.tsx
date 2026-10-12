@@ -247,7 +247,7 @@ const WeeklyPlanEditor: React.FC = () => {
       }
 
       // Navigate to review screen
-      navigate('/review');
+      navigate('/review', { state: { weeklyPlan } });
     } catch (error) {
       console.error('Error saving weekly plan:', error);
     }

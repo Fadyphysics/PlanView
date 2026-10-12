@@ -1,7 +1,9 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // Using react-i18next's hook
 import { initDb } from './utils/indexedDbUtils';
+import { getAllWeeklyPlans } from './utils/indexedDbUtils';
+import type { WeeklyPlan } from './models';
 import './App.css';
 import HomeScreen from './components/HomeScreen';
 import ProfileSetup from './components/ProfileSetup';
@@ -26,6 +28,72 @@ export const useProfile = () => {
   }
   return context;
 };
+
+function ReviewRoute() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [weeklyPlan, setWeeklyPlan] = useState<WeeklyPlan | null>(
+    (location.state as { weeklyPlan?: WeeklyPlan } | null)?.weeklyPlan ?? null
+  );
+  const [isLoading, setIsLoading] = useState(!weeklyPlan);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const statePlan = (location.state as { weeklyPlan?: WeeklyPlan } | null)?.weeklyPlan;
+    if (statePlan) {
+      setWeeklyPlan(statePlan);
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    getAllWeeklyPlans()
+      .then(plans => {
+        const latestPlan = plans.sort(
+          (first, second) => new Date(second.updatedAt).getTime() - new Date(first.updatedAt).getTime()
+        )[0];
+        if (isMounted) {
+          setWeeklyPlan(latestPlan ?? null);
+        }
+      })
+      .catch(error => {
+        console.error('Error loading weekly plan for review:', error);
+        if (isMounted) {
+          setLoadError('Could not load the weekly plan. Please return to your plans and try again.');
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [location.state]);
+
+  if (isLoading) {
+    return <div className="app-loading"><div className="spinner"></div><p>Loading weekly plan...</p></div>;
+  }
+
+  if (!weeklyPlan) {
+    return (
+      <div className="app-loading">
+        <p>{loadError ?? 'No saved weekly plan was found to review.'}</p>
+        <button className="btn btn-primary" onClick={() => navigate('/')}>Home</button>
+      </div>
+    );
+  }
+
+  return (
+    <ReviewScreen
+      weeklyPlan={weeklyPlan}
+      onEdit={() => navigate(-1)}
+      onHome={() => navigate('/')}
+    />
+  );
+}
 
 // Wrapper component to handle location changes and profile checking
 function AppContent() {
@@ -138,7 +206,7 @@ function AppContent() {
           <Route path="/profile-setup" element={<ProfileSetup />} />
           <Route path="/weekly-plan" element={<WeeklyPlanEditor />} />
           <Route path="/day/:dayIndex" element={<DayEditor />} />
-          <Route path="/review" element={<ReviewScreen />} />
+          <Route path="/review" element={<ReviewRoute />} />
           {/* Catch-all route for unmatched paths */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
