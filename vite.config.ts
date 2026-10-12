@@ -5,10 +5,9 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/PlanView/', // Changed to deploy under subdirectory
+  base: '/', // Set to root for Vercel deployment
   resolve: {
     alias: {
-      // Force all imports to use the same React instance in the root node_modules
       'react': path.resolve(__dirname, './node_modules/react'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
     },
@@ -19,7 +18,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       devOptions: {
-        enabled: false // Disable service worker during development to allow hot-reloading
+        enabled: false
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,ttf,eot,woff,woff2,json,xml,txt,webp,jpg,jpeg,gif,ico,bmp,tiff}'],
