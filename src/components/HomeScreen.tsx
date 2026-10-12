@@ -20,7 +20,7 @@ const HomeScreen: React.FC = () => {
       setShowDeleteMenu({show: true, className});
     }, 500);
     
-    setLongPressTimer(timer);
+    setLongPressTimer(timer as unknown as number);
   };
 
   const handleLongPressEnd = () => {
